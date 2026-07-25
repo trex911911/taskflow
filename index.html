@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — Productivity App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Decorative background orbs for glassmorphism depth -->
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <main class="app glass">
+    <!-- Top bar: date + dark mode toggle -->
+    <div class="top-bar">
+      <p id="today-date" class="today-date" aria-live="polite"></p>
+      <button
+        type="button"
+        id="theme-toggle"
+        class="theme-toggle"
+        aria-label="Toggle dark mode"
+        title="Toggle dark mode"
+      >
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀️</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">🌙</span>
+      </button>
+    </div>
+
+    <header class="app-header">
+      <h1 class="app-title">TaskFlow</h1>
+      <p class="app-subtitle">Your premium productivity companion</p>
+    </header>
+
+    <!-- View tabs: Tasks | Calendar -->
+    <nav class="view-tabs" aria-label="App views">
+      <button type="button" class="view-tab active" id="tab-tasks" data-view="tasks" aria-selected="true">
+        <span aria-hidden="true">📋</span> Tasks
+      </button>
+      <button type="button" class="view-tab" id="tab-calendar" data-view="calendar" aria-selected="false">
+        <span aria-hidden="true">📅</span> Calendar
+      </button>
+    </nav>
+
+    <!-- ===== Tasks View ===== -->
+    <div id="tasks-view" class="view-panel active">
+    <section class="progress-section" aria-label="Task completion progress">
+      <div class="progress-header">
+        <span class="progress-label">Progress</span>
+        <span id="progress-text" class="progress-text">0 of 0 completed</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+      </div>
+    </section>
+
+    <!-- Task Analytics -->
+    <section class="analytics-section" id="analytics-section" aria-label="Task analytics">
+      <h2 class="analytics-title">Task Analytics</h2>
+      <div class="analytics-grid">
+        <article class="analytics-card analytics-total">
+          <span class="analytics-icon" aria-hidden="true">📋</span>
+          <p id="stat-total" class="analytics-value">0</p>
+          <p class="analytics-label">Total Tasks</p>
+        </article>
+        <article class="analytics-card analytics-completed">
+          <span class="analytics-icon" aria-hidden="true">✅</span>
+          <p id="stat-completed" class="analytics-value">0</p>
+          <p class="analytics-label">Completed</p>
+        </article>
+        <article class="analytics-card analytics-pending">
+          <span class="analytics-icon" aria-hidden="true">⏳</span>
+          <p id="stat-pending" class="analytics-value">0</p>
+          <p class="analytics-label">Pending</p>
+        </article>
+        <article class="analytics-card analytics-percent">
+          <span class="analytics-icon" aria-hidden="true">📊</span>
+          <p id="stat-percent" class="analytics-value">0%</p>
+          <p class="analytics-label">Completion</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Daily Streak -->
+    <section class="streak-section" id="streak-section" aria-label="Daily streak">
+      <h2 class="streak-title">Daily Streak</h2>
+      <div class="streak-grid">
+        <article class="streak-card streak-current">
+          <span class="streak-icon streak-icon-fire" aria-hidden="true">🔥</span>
+          <p id="streak-current" class="streak-value">0</p>
+          <p class="streak-label">Current Streak</p>
+        </article>
+        <article class="streak-card streak-longest">
+          <span class="streak-icon" aria-hidden="true">🏆</span>
+          <p id="streak-longest" class="streak-value">0</p>
+          <p class="streak-label">Longest Streak</p>
+        </article>
+      </div>
+      <p id="streak-message" class="streak-message" aria-live="polite"></p>
+    </section>
+
+    <!-- Search -->
+    <div class="search-wrapper">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search tasks..."
+        autocomplete="off"
+        aria-label="Search tasks"
+      >
+    </div>
+
+    <!-- Add task -->
+    <section class="input-section">
+      <div class="task-input-wrapper">
+        <input
+          type="text"
+          id="task-input"
+          class="task-input glass-input"
+          placeholder="What needs to be done?"
+          autocomplete="off"
+          aria-label="New task"
+        >
+        <button
+          type="button"
+          id="voice-btn"
+          class="voice-btn"
+          aria-label="Voice input"
+          title="Speak to add a task"
+        >
+          <span class="voice-icon" aria-hidden="true">🎤</span>
+          <span class="voice-pulse" aria-hidden="true"></span>
+        </button>
+      </div>
+      <select id="priority-select" class="priority-select glass-input" aria-label="Task priority">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+      <input
+        type="date"
+        id="due-date-input"
+        class="due-date-input glass-input"
+        aria-label="Due date (optional)"
+        title="Due date (optional)"
+      >
+      <button type="button" id="add-btn" class="add-btn">
+        <span class="add-btn-text">Add</span>
+        <span class="add-btn-icon" aria-hidden="true">+</span>
+      </button>
+    </section>
+    <p id="voice-status" class="voice-status hidden" aria-live="polite"></p>
+
+    <ul id="task-list" class="task-list" aria-live="polite"></ul>
+
+    <p id="empty-state" class="empty-state">
+      <span class="empty-icon" aria-hidden="true">✨</span>
+      No tasks yet
+    </p>
+    <p id="no-results" class="empty-state hidden">
+      <span class="empty-icon" aria-hidden="true">🔎</span>
+      No matching tasks
+    </p>
+    </div>
+
+    <!-- ===== Calendar View ===== -->
+    <div id="calendar-view" class="view-panel">
+      <section class="calendar-section" aria-label="Monthly calendar">
+        <div class="calendar-nav">
+          <button type="button" id="cal-prev" class="cal-nav-btn" aria-label="Previous month">‹</button>
+          <h2 id="cal-month-label" class="cal-month-label"></h2>
+          <button type="button" id="cal-next" class="cal-nav-btn" aria-label="Next month">›</button>
+        </div>
+
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+          <span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+
+        <div id="calendar-grid" class="calendar-grid" role="grid" aria-label="Calendar days"></div>
+      </section>
+
+      <section class="calendar-tasks-panel" aria-label="Tasks for selected date">
+        <h3 id="cal-selected-label" class="cal-tasks-title"></h3>
+        <ul id="calendar-task-list" class="calendar-task-list"></ul>
+        <p id="cal-empty" class="empty-state hidden">
+          <span class="empty-icon" aria-hidden="true">📅</span>
+          No tasks due on this day
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
